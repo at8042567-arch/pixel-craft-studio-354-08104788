@@ -532,15 +532,15 @@ function Index() {
   );
 }
 
-function FloatingField({ id, label, type, inputType }: { id: string; label: string; type: string; inputType?: string }) {
+function FloatingField({ id, name, label, type, inputType }: { id: string; name?: string; label: string; type: string; inputType?: string }) {
   const [val, setVal] = useState("");
   return (
     <div className={`field${val ? " has-value" : ""}`}>
       <label htmlFor={id}>{label}</label>
       {type === "textarea" ? (
-        <textarea id={id} rows={5} value={val} onChange={(e) => setVal(e.target.value)} required />
+        <textarea id={id} name={name || id} rows={5} value={val} onChange={(e) => setVal(e.target.value)} required />
       ) : (
-        <input id={id} type={inputType || "text"} value={val} onChange={(e) => setVal(e.target.value)} required />
+        <input id={id} name={name || id} type={inputType || "text"} value={val} onChange={(e) => setVal(e.target.value)} required />
       )}
     </div>
   );
