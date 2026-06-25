@@ -142,6 +142,33 @@ function Index() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const form = e.currentTarget as HTMLFormElement;
+    const data = new FormData(form);
+    const name = (data.get("name") as string) || "";
+    const email = (data.get("email") as string) || "";
+    const company = (data.get("company") as string) || "";
+    const msg = (data.get("msg") as string) || "";
+    const budgetMap: Record<string, string> = {
+      u50: "Under PKR 50K",
+      "50-150": "PKR 50–150K",
+      "150-500": "PKR 150–500K",
+      "500+": "PKR 500K+",
+      usd: "International USD",
+    };
+    const budget = budgetMap[(data.get("budget") as string) || ""] || "";
+    const lines = [
+      "Hi AreneX — new project inquiry",
+      "",
+      `Name: ${name}`,
+      `Email: ${email}`,
+      `Company / Project: ${company}`,
+      `Budget: ${budget}`,
+      "",
+      "Project details:",
+      msg,
+    ];
+    const text = encodeURIComponent(lines.join("\n"));
+    window.open(`https://wa.me/923434247850?text=${text}`, "_blank", "noopener");
     setSubmitted(true);
   };
 
@@ -442,16 +469,16 @@ function Index() {
             {!submitted && (
               <>
                 {[
-                  { id: "name", label: "Name", type: "input" },
-                  { id: "email", label: "Email", type: "input", inputType: "email" },
-                  { id: "company", label: "Company / Project Name", type: "input" },
-                  { id: "msg", label: "Tell us about your project", type: "textarea" },
+                  { id: "name", name: "name", label: "Name", type: "input" },
+                  { id: "email", name: "email", label: "Email", type: "input", inputType: "email" },
+                  { id: "company", name: "company", label: "Company / Project Name", type: "input" },
+                  { id: "msg", name: "msg", label: "Tell us about your project", type: "textarea" },
                 ].map((f) => (
                   <FloatingField key={f.id} {...f} />
                 ))}
                 <div className="field">
                   <label htmlFor="budget">Budget Range</label>
-                  <select id="budget" defaultValue="" required onChange={(e) => e.target.closest(".field")?.classList.toggle("has-value", !!e.target.value)}>
+                  <select id="budget" name="budget" defaultValue="" required onChange={(e) => e.target.closest(".field")?.classList.toggle("has-value", !!e.target.value)}>
                     <option value="" disabled hidden></option>
                     <option value="u50">Under PKR 50K</option>
                     <option value="50-150">PKR 50–150K</option>
@@ -461,14 +488,14 @@ function Index() {
                   </select>
                 </div>
                 <button type="submit" className="btn-submit" style={{ marginTop: 48 }}>
-                  Send Message →
+                  Send via WhatsApp →
                 </button>
               </>
             )}
             {submitted && (
               <div style={{ padding: "60px 0", textAlign: "center" }}>
                 <div className="btn-primary" style={{ cursor: "default" }}>
-                  <span>Sent. We'll respond within 24h ✓</span>
+                  <span>Opened in WhatsApp — hit send to reach us ✓</span>
                 </div>
               </div>
             )}
